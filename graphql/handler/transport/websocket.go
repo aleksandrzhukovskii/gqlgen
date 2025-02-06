@@ -188,8 +188,8 @@ func (c *wsConnection) init() bool {
 	switch m.t {
 	case initMessageType:
 		if len(m.payload) > 0 {
-			var tmp interface{}
-			err := json.Unmarshal(m.payload, &tmp)
+			c.initPayload = make(InitPayload)
+			err := json.Unmarshal(m.payload, &c.initPayload)
 			if err != nil {
 				return false
 			}
@@ -223,6 +223,7 @@ func (c *wsConnection) init() bool {
 	case startMessageType:
 		c.sendConnectionError("Unauthorized")
 		c.close(4401, "Unauthorized")
+		return false
 	default:
 		c.sendConnectionError("unexpected message %s", m.t)
 		c.close(4400, "unexpected message")
@@ -293,7 +294,6 @@ func (c *wsConnection) run() {
 			if !errors.Is(err, net.ErrClosed) {
 				c.handlePossibleError(err, true)
 			}
-
 			return
 		}
 
