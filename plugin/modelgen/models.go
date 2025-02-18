@@ -637,11 +637,6 @@ func removeDuplicateTags(t string) string {
 			returnTags = " " + returnTags
 		}
 
-		isContained := containsInvalidSpace(value)
-		if isContained {
-			panic(fmt.Errorf("tag value should not contain any leading or trailing spaces: %s", value))
-		}
-
 		returnTags = key + ":" + value + returnTags
 	}
 
